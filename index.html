@@ -2,10 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cryptex</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cryptex Puzzle</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
 </head>
 <body>
-  <h> boop!</h>
-
+    <h1> Feel like you can solve the puzzle?</h1>
+    <p>Guess the 5 letter word and you win!</p>
+    <input type="text" id="english" placeholder="Type here..." />
+    <button id="guess-button">Guess</button>
+    <div id="output"></div>
+    <script type="py" src ="./main.py" config=" ./conf.json"./main.py"></script>
 </body>
 </html>
