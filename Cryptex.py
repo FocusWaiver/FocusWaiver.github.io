@@ -1,10 +1,11 @@
 #Cryptex py file
-from pyscript import web, when
-
-print("It worked?")
+from pyscript import web, when, display
 
 @when("click", "#guess-button")
 def AnswerCk(event):
-    input_text = web.page["english"]
+    input_text = web.page["guess"]
     guess = input_text.value
-    print(guess)
+    if guess == "guess":
+        display("Correct!", target= "output-div")
+    else:
+        display("Nope, Try Again", target= "output-div")
