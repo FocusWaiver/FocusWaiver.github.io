@@ -1,6 +1,6 @@
 #Cryptex py file
 from pyscript import web, when, display
-correct = "guess"
+correct = "world"
 @when("click", "#guess-button")
 def AnswerCk(event):
     input_text = web.page["guess"]
