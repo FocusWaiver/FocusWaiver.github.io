@@ -10,7 +10,7 @@ def AnswerCk(event):
         if guess == correct:
             display("Correct! Great Job!", target= "output")
         else:
-            score(guess)
+            score = scorer(guess)
             display("Incorrect.",guess, "scored: ",score, target= "output")
     else:
         display("Sorry, your guess must be 5 letters.")
@@ -53,3 +53,4 @@ def scorer(ans):
         for c in correctlist:
             if b == c:
                 score += 1
+    return score
