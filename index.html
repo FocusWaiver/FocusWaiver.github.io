@@ -30,12 +30,13 @@
                 });
 
                 const result = await response.json();
-                if (${result.winner} == "1") {
+                if (result.winner) == 1) {
                     outputDiv.textContent = "Congratulations!! You are correct!";
                 } else {
-                    outputDiv.textContent = "Your guess scored: ${result.score}, Try Again.";
+                    outputDiv.textContent = `Your guess scored: ${result.score}, Try Again.`;
+                }
             } catch (err) {
-                output.Div.textContent = "Something went wrong. Try again.";
+                outputDiv.textContent = "Something went wrong. Try again.";
                 console.error("Error checking guess:", err);
             }
         });       
