@@ -19,16 +19,11 @@
             const guessInput = document.getElementById("guess");
             const outputDiv = document.getElementById("output");
             const userGuess = guessInput.value.trim();
-            
-            if (userGuess.length !==5) {
-                outputDiv.textContent = "Must be a 5-letter word.";
-                return;
-            }
 
-            outputDiv.textContent = "Please be paitent, I'm cheap, and the first guess may take 30-60 seconds to process. :)";
+            outputDiv.textContent = "Please be patient, I'm cheap, and the first guess may take 30-60 seconds to process.";
 
             try {
-                const response = await fetch ("https://cryptexsafe.onrender.com/", {
+                const response = await fetch ("https://cryptexsafe.onrender.com", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify ({guess: userGuess})
