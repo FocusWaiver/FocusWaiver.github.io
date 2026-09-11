@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cryptex Puzzle</title>
-    <link rel="stylesheet" href="https://pyscript.net/releases/2026.7.3/core.css" />
-    <script type="module" src="https://pyscript.net/releases/2026.7.3/core.js"></script>
 </head>
 <body>
     <h1> Feel like you can solve the puzzle?</h1>
@@ -15,6 +13,37 @@
     <input type="text" id="guess" placeholder="Type here..." />
     <button id="guess-button">Guess</button>
     <div id="output"></div>
-    <script type="py" src ="./Cryptex.py"></script>
+    
+    <script>
+        document.getElementById("guess-button").addEventListener("click", async () => {
+            const guessInput = document.getElementById("guess");
+            const outputDiv = document.getElementById("output");
+            const userGuess = guessInput.value.trim();
+            
+            if (userGuess.length !==5) {
+                outputDiv.textContent = "Must be a 5-letter word.";
+                return;
+            }
+
+            outputDiv.textContent = "Please be paitent, I'm cheap, and the first guess may take 30-60 seconds to process. :)";
+
+            try {
+                const response = await fetch ("https://cryptexsafe.onrender.com/", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify ({guess: userGuess})
+                });
+
+                const result = await response.json();
+                if (${result.winner} == "1") {
+                    outputDiv.textContent = "Congratulations!! You are correct!";
+                } else {
+                    outputDiv.textContent = "Your guess scored: ${result.score}, Try Again.";
+            } catch (err) {
+                output.Div.textContent = "Something went wrong. Try again.";
+                console.error("Error checking guess:", err);
+            }
+        });       
+    </script>
 </body>
 </html>
