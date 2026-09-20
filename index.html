@@ -37,13 +37,18 @@
             margin-bottom: 10px;
         }
 
-        p {
+        p1 {
             margin: 8px 0;
-            font-size: 0.9em;
+            font-size: 1.25em;
+        }
+
+        p2 {
+            margin: 8px 0;
+            font-size: 0.8em;
         }
 
         .instructions-small {
-            font-size: 0.7em;
+            font-size: 0.65em;
             opacity: 0.8;
         }
 
@@ -130,9 +135,10 @@
 </head>
 <body>
     <h1> Feel like you can solve the puzzle?</h1>
-    <p>Guess the 5-letter word and you win!</p>
-    <p>2 points for correct letter in position. 1 point for letter out of position</p>
-    <p class="instructions-small">(Letters in position will not be counted twice)</p>
+    <hr style="width:95%">
+    <p1>Guess the 5-letter word and you win!</p1>
+    <p2>2 points for a letter in the correct position. 1 point for each letter in the solution, but out of position.</p2>
+    <p class="instructions-small">(Letters in position will not be scored twice)</p>
     <!--5 Separate Dials -->
     <div class="cryptex-container" id="cryptex">
         <input type="text" class="dial" maxlength="1" autocomplete="off" />
