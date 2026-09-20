@@ -4,21 +4,182 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cryptex Puzzle</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Cinzel Decorative">
+    <style>
+        /*Main color pallette*/
+        :root{
+            --bg: #070b14;
+            --text: #e9f7ff;
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.5);
+            --danger: #ff5577;
+        }
+        /*Prevents layout breakout*/
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-content: center;
+            padding: 24px;
+            color: var(--text);
+            font-family: 'Cinzel Decorative',serif;
+            font-size: 20px;
+            overflow-x: hidden;
+            background: var(--bg);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 8px 0;
+            font-size: 0.9em;
+        }
+
+        .instructions-small {
+            font-size: 0.7em;
+            opacity: 0.8;
+        }
+
+        /*5-letter Dial Container*/
+        .cryptex-container {
+            display: flex;
+            justify-content: center;
+            gap: 12 px;
+            margin: 28px 0;
+        }
+
+        /*Individual Dial Input*/
+        .dial {
+            width: 55px;
+            height: 70px;
+            text-align: center;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--gold);
+            background: #0b1526;
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            outline: none;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0 ,0.5);
+            transition: all 0.2s ease;
+        }
+
+        .dial:focus {
+            box-shadow: 0 0 15px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        /*Controls*/
+        button {
+            padding: 12px 28px;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 18 px;
+            color: #070b14;
+            background: var(--gold);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #output {
+            margin-top: 24px;
+            min-height: 40px;
+            font-size: 18px;
+        }
+
+        /*Animation Shake on Incorrect guess*/
+        .cryptex-container.shake {
+            animation: cryptex-shake 0.4s ease-in-out;
+        }
+
+        @keyframes cryptex-shake {
+            0%, 100% {transform: translateX(0);}
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        /*Animation Unlock on Correct guess*/
+        .cryptex-container.unlocked .dial {
+            border-color: #39ff14;
+            color: #39ff14;
+            box-shadow: 0 0 20px rgba(57,255,20,0.7);
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
     <h1> Feel like you can solve the puzzle?</h1>
     <p>Guess the 5-letter word and you win!</p>
     <p>2 points for correct letter in position. 1 point for letter out of position</p>
-    <p>(Letters in position will not be counted twice)</p>
-    <input type="text" id="guess" placeholder="Type here..." />
+    <p class="instructions-small">(Letters in position will not be counted twice)</p>
+    <!--5 Separate Dials -->
+    <div class="cryptex-container" id="cryptex">
+        <input type="text" class="dial" maxlength="1" autocomplete="off" />
+        <input type="text" class="dial" maxlength="1" autocomplete="off" />
+        <input type="text" class="dial" maxlength="1" autocomplete="off" />
+        <input type="text" class="dial" maxlength="1" autocomplete="off" />
+        <input type="text" class="dial" maxlength="1" autocomplete="off" />
+    </div>
     <button id="guess-button">Guess</button>
     <div id="output"></div>
     
     <script>
+        const dials = document.querySelectorAll('.dial');
+        const cryptexContainer = document.getElementById('cryptex');
+
+        // Auto-advance typing & backspace handling
+        dials.forEach((dial,index) => {
+            dial.addEventListener('input', () => {
+                dial.value = dial.value.toUpperCase();
+                if (dial.value && index < dials.length - 1) {
+                    dials[index + 1].focus();
+                }
+            });
+
+            dial.addEventListener('keydown', (e) => {
+                if (e.key == 'Backspace' && !dial.value && index >0) {
+                    dials[index - 1].focus();
+                }
+            });
+        });
+
+        // Helper to combine dial inputs into a single string
+        function getFullGuess() {
+            return Array.from(dials).map(d => d.value).join('');
+        }
+
         document.getElementById("guess-button").addEventListener("click", async () => {
-            const guessInput = document.getElementById("guess");
             const outputDiv = document.getElementById("output");
-            const userGuess = guessInput.value.trim();
+            const userGuess = getFullGuess().trim();
+
+            if (userGuess.length <5) {
+                outputDiv.textContent = "Please enter all 5 letters!";
+                return;
+            }
+
+            //Reset Animations
+            cryptexContainer.classList.remove('shake', 'unlocked');
 
             outputDiv.textContent = "Please be patient, I'm cheap, and the first guess may take 30-60 seconds to process.";
 
@@ -31,8 +192,11 @@
 
                 const result = await response.json();
                 if (result.winner) {
+                    cryptexContainer.classList.add('unlocked');
                     outputDiv.textContent = "Congratulations!! You are correct!";
                 } else {
+                    void cryptexContainer.offsetWidth;
+                    cryptexContainer.classList.add('shake');
                     outputDiv.textContent = `Your guess scored: ${result.score}, Try Again.`;
                 }
             } catch (err) {
